@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/frameLayout"
+    android:background="@drawable/on_click_default_style">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:id="@+id/background"
+        android:src="@drawable/test_holder"
+        android:scaleType="centerCrop"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/postTitle"
+            android:background="#83000000"
+            android:text="Alzheimer's and the Brain"
+            android:textSize="25dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BFFFFFFF"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:gravity="top"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/postDescription"
+            android:background="#83000000"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BFFFFFFF"
+            android:hint="HUGE THANKS to The Alzheimer's Association for graciously giving me time with and access to scientists currently researching the disease. You can learn more about them here: https://www.alz.org/"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            android:gravity="top"
+            android:maxLines="2"
+            android:ellipsize="end" />
+    </LinearLayout>
+</FrameLayout>
