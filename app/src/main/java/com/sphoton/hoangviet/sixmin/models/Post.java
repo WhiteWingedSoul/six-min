@@ -2,12 +2,13 @@ package com.sphoton.hoangviet.sixmin.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by hoangviet on 10/11/16.
  */
-public class Post {
+public class Post implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("created_at")
@@ -26,6 +27,7 @@ public class Post {
     private String audioLink;
     @SerializedName("date")
     private String date;
+
 
     public int getId() {
         return id;

@@ -17,7 +17,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sphoton.hoangviet.sixmin.Commons;
 import com.sphoton.hoangviet.sixmin.R;
+import com.sphoton.hoangviet.sixmin.activities.MainActivity;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
@@ -39,12 +41,10 @@ public class PostListFragment extends Fragment {
     private RecyclerView recyclerView;
     private PostPreviewAdapter adapter;
 
-    public static final String TOPIC = "topic";
-
     public static PostListFragment newInstance(Topic topic) {
         PostListFragment fragment = new PostListFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TOPIC, topic);
+        args.putSerializable(Commons.TOPIC, topic);
         fragment.setArguments(args);
 
         return fragment;
@@ -73,7 +73,7 @@ public class PostListFragment extends Fragment {
 
     private void setUpAdapter(RecyclerView recyclerView) {
         final PostPreviewAdapter adapter = new PostPreviewAdapter(getActivity());
-        Topic topic = (Topic)getArguments().getSerializable(TOPIC);
+        Topic topic = (Topic)getArguments().getSerializable(Commons.TOPIC);
         APIManager.GETPost(topic.getTitle(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -124,7 +124,7 @@ public class PostListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             PostPreviewHolder vh = (PostPreviewHolder) holder;
-            Post post = mList.get(position);
+            final Post post = mList.get(position);
             Picasso.with(getActivity()).load("http://"+post.getCoverLink())
                     .fit()
                     .into(vh.background);
@@ -134,7 +134,9 @@ public class PostListFragment extends Fragment {
             vh.frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(Commons.POST, post);
+                    ((MainActivity)mContext).startActivity(1, bundle);
                 }
             });
         }

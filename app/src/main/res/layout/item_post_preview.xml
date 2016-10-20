@@ -45,7 +45,7 @@
             android:hint="HUGE THANKS to The Alzheimer's Association for graciously giving me time with and access to scientists currently researching the disease. You can learn more about them here: https://www.alz.org/"
             android:paddingLeft="10dp"
             android:paddingRight="20dp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             android:gravity="top"
             android:maxLines="2"
             android:ellipsize="end" />

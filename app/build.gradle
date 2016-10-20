@@ -10,6 +10,8 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        renderscriptTargetApi 24
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -34,4 +36,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
 
+    compile 'com.fivehundredpx:blurringview:1.0.0'
+    compile 'me.relex:circleindicator:1.2.1@aar'
 }

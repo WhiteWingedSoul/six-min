@@ -1,17 +1,21 @@
 package com.sphoton.hoangviet.sixmin.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    //private ActionBarDrawerToggle toggle;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,25 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this,
+                drawerLayout,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close) {
+
+            public void onDrawerClosed(View view)
+            {
+                supportInvalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView)
+            {
+                supportInvalidateOptionsMenu();
+            }
+        };
+        toggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.setDrawerListener(toggle);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -119,21 +143,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        //toggle.syncState();
+        toggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
-        //toggle.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //if (toggle.onOptionsItemSelected(item)) {
-        //    return true;
-        //}
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void startActivity(int type, Bundle bundle){
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }
