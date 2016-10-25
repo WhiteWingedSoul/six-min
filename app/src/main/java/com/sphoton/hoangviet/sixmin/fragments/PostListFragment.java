@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ import com.sphoton.hoangviet.sixmin.Commons;
 import com.sphoton.hoangviet.sixmin.R;
 import com.sphoton.hoangviet.sixmin.activities.MainActivity;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
+import com.sphoton.hoangviet.sixmin.managers.FileManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
 import com.squareup.picasso.Picasso;
@@ -139,6 +141,12 @@ public class PostListFragment extends Fragment {
                     ((MainActivity)mContext).startActivity(1, bundle);
                 }
             });
+
+            if(FileManager.isDownloaded(getActivity(), "http://"+post.getAudioLink())){
+                vh.downloadStatus.setVisibility(View.VISIBLE);
+            }else{
+                vh.downloadStatus.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -154,6 +162,7 @@ public class PostListFragment extends Fragment {
         public ImageView background;
         public TextView title;
         public TextView description;
+        public LinearLayout downloadStatus;
 
         public PostPreviewHolder(View view){
             super(view);
@@ -162,6 +171,7 @@ public class PostListFragment extends Fragment {
             background = (ImageView) view.findViewById(R.id.background);
             title = (TextView) view.findViewById(R.id.postTitle);
             description = (TextView) view.findViewById(R.id.postDescription);
+            downloadStatus = (LinearLayout) view.findViewById(R.id.downloadStatus);
         }
 
     }

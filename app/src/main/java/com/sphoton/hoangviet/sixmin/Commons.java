@@ -7,4 +7,6 @@ package com.sphoton.hoangviet.sixmin;
 public class Commons {
     public static final String POST = "post";
     public static final String TOPIC = "topic";
+    public static final String VOCABULARY = "vocabulary";
+
 }

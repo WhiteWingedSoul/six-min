@@ -1,19 +1,23 @@
 package com.sphoton.hoangviet.sixmin.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.sphoton.hoangviet.sixmin.Commons;
 import com.sphoton.hoangviet.sixmin.R;
+import com.sphoton.hoangviet.sixmin.adapters.VocabularyViewPagerAdapter;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Vocabulary;
 import com.sphoton.hoangviet.sixmin.thirdparties.DividerItemDecoration;
@@ -28,6 +32,7 @@ public class PostVocabularyFragment extends Fragment {
     private RecyclerView recyclerView;
     private PostVocabularyAdapter adapter;
     private Post mPost;
+    private static VocabularyDialogFragment dialogFragment;
 
     public static PostVocabularyFragment newInstance(Post post) {
         PostVocabularyFragment fragment = new PostVocabularyFragment();
@@ -54,6 +59,17 @@ public class PostVocabularyFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        TextView flashCard = (TextView) view.findViewById(R.id.flashCard);
+
+        flashCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogFragment = VocabularyDialogFragment.newInstance(mPost);
+                dialogFragment.show(getChildFragmentManager(), null);
+            }
+        });
+
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

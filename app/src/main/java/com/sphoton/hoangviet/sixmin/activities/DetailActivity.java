@@ -28,6 +28,7 @@ import com.sphoton.hoangviet.sixmin.fragments.PostContentFragment;
 import com.sphoton.hoangviet.sixmin.fragments.PostListFragment;
 import com.sphoton.hoangviet.sixmin.fragments.PostVocabularyFragment;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
+import com.sphoton.hoangviet.sixmin.managers.FileManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
 import com.sphoton.hoangviet.sixmin.thirdparties.BlurTransform;
@@ -96,7 +97,7 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Picasso.with(this).load("http://"+mPost.getCoverLink()).transform(new BlurTransform(this))
+        Picasso.with(this).load(R.drawable.background2).transform(new BlurTransform(this))
                 .fit()
                 .into(background);
 
@@ -201,7 +202,7 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    mediaPlayer.setDataSource("http://" + mPost.getAudioLink());
+                    mediaPlayer.setDataSource(FileManager.getAudioFilePath(DetailActivity.this, "http://"+mPost.getAudioLink()));
                     mediaPlayer.prepare();
                 } catch (IOException e){
                     e.printStackTrace();

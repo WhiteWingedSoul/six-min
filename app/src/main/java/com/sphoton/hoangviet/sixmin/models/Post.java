@@ -27,6 +27,7 @@ public class Post implements Serializable {
     private String audioLink;
     @SerializedName("date")
     private String date;
+    private boolean isDownloaded;
 
 
     public int getId() {
@@ -99,5 +100,13 @@ public class Post implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isDownloaded() {
+        return isDownloaded;
+    }
+
+    public void setDownloaded(boolean downloaded) {
+        isDownloaded = downloaded;
     }
 }

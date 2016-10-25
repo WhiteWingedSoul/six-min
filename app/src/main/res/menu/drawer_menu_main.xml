@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:id="@+id/drawer_item_home"
+            android:icon="@drawable/ic_home_black_48dp"
+            android:title="Home" />
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/drawer_item_guide"
+            android:icon="@drawable/ic_help_black_48dp"
+            android:title="About us" />
+
+        <item
+            android:id="@+id/drawer_item_review"
+            android:icon="@drawable/ic_feedback_black_48dp"
+            android:title="Feedback"/>
+        <item
+            android:id="@+id/drawer_item_like"
+            android:icon="@drawable/ic_thumb_up_black_48dp"
+            android:title="Rating"/>
+    </group>
+</menu>

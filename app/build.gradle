@@ -38,4 +38,5 @@ dependencies {
 
     compile 'com.fivehundredpx:blurringview:1.0.0'
     compile 'me.relex:circleindicator:1.2.1@aar'
+    compile 'com.danikula:videocache:2.6.3'
 }
