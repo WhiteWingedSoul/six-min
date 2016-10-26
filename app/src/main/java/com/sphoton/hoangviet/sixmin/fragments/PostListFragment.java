@@ -1,10 +1,12 @@
 package com.sphoton.hoangviet.sixmin.fragments;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,6 +73,12 @@ public class PostListFragment extends Fragment {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         setUpAdapter(recyclerView);
+
+
+        ImageView background = (ImageView) view.findViewById(R.id.background);
+        Picasso.with(getActivity()).load(R.drawable.background2)
+                .fit()
+                .into(background);
     }
 
     private void setUpAdapter(RecyclerView recyclerView) {
@@ -158,7 +166,7 @@ public class PostListFragment extends Fragment {
     }
 
     class PostPreviewHolder extends RecyclerView.ViewHolder{
-        public FrameLayout frameLayout;
+        public CardView frameLayout;
         public ImageView background;
         public TextView title;
         public TextView description;
@@ -167,7 +175,7 @@ public class PostListFragment extends Fragment {
         public PostPreviewHolder(View view){
             super(view);
 
-            frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
+            frameLayout = (CardView) view.findViewById(R.id.frameLayout);
             background = (ImageView) view.findViewById(R.id.background);
             title = (TextView) view.findViewById(R.id.postTitle);
             description = (TextView) view.findViewById(R.id.postDescription);

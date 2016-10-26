@@ -1,82 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/frameLayout"
-    android:background="@drawable/on_click_default_style">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
+    <android.support.v7.widget.CardView
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:id="@+id/background"
-        android:src="@drawable/test_holder"
-        android:scaleType="centerCrop"/>
-
-    <LinearLayout
-        android:id="@+id/downloadStatus"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:background="#50000000">
-
+        android:layout_height="match_parent"
+        android:background="@drawable/on_click_default_style"
+        card_view:cardElevation="14dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
         <ImageView
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/tick_icon"/>
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:id="@+id/background"
+            android:src="@drawable/test_holder"
+            android:scaleType="centerCrop"
+            android:background="@drawable/curve_corners_with_border"/>
 
-        <TextView
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+        <LinearLayout
+            android:id="@+id/downloadStatus"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:text="DOWNLOADED"
-            android:gravity="center"
-            android:textColor="#fff"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="#50000000">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/tick_icon"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="DOWNLOADED"
+                android:gravity="center"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/postTitle"
-            android:background="#83000000"
-            android:text="Alzheimer's and the Brain"
-            android:textSize="25dp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BFFFFFFF"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="10dp"
-            android:gravity="top"
-            />
+            android:orientation="vertical"
+            android:layout_gravity="bottom">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/postDescription"
-            android:background="#83000000"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BFFFFFFF"
-            android:hint="HUGE THANKS to The Alzheimer's Association for graciously giving me time with and access to scientists currently researching the disease. You can learn more about them here: https://www.alz.org/"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="10dp"
-            android:gravity="top"
-            android:maxLines="2"
-            android:ellipsize="end" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/postTitle"
+                android:background="#83000000"
+                android:text="Alzheimer's and the Brain"
+                android:textSize="25dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#BFFFFFFF"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:gravity="top"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/postDescription"
+                android:background="#83000000"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#BFFFFFFF"
+                android:hint="HUGE THANKS to The Alzheimer's Association for graciously giving me time with and access to scientists currently researching the disease. You can learn more about them here: https://www.alz.org/"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="10dp"
+                android:gravity="top"
+                android:maxLines="2"
+                android:ellipsize="end" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
 </FrameLayout>

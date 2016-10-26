@@ -1,5 +1,7 @@
 package com.sphoton.hoangviet.sixmin.fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -46,6 +48,7 @@ public class VocabularyDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         VocabularyViewPagerAdapter vocabularyAdapter = new VocabularyViewPagerAdapter(getChildFragmentManager(), mPost.getVocabularyList());
