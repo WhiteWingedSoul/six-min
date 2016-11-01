@@ -60,15 +60,15 @@ public class PostVocabularyFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView flashCard = (TextView) view.findViewById(R.id.flashCard);
-
-        flashCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogFragment = VocabularyDialogFragment.newInstance(mPost);
-                dialogFragment.show(getChildFragmentManager(), null);
-            }
-        });
+//        TextView flashCard = (TextView) view.findViewById(R.id.flashCard);
+//
+//        flashCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialogFragment = VocabularyDialogFragment.newInstance(mPost);
+//                dialogFragment.show(getChildFragmentManager(), null);
+//            }
+//        });
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);

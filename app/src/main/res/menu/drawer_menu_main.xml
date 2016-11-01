@@ -16,11 +16,6 @@
         android:checkableBehavior="none">
 
         <item
-            android:id="@+id/drawer_item_guide"
-            android:icon="@drawable/ic_help_black_48dp"
-            android:title="About us" />
-
-        <item
             android:id="@+id/drawer_item_review"
             android:icon="@drawable/ic_feedback_black_48dp"
             android:title="Feedback"/>

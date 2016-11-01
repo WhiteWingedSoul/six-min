@@ -5,17 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/flashCard"
-        android:background="@drawable/on_click_default_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FLASH CARD"
-        android:textStyle="bold"
-        android:textColor="#fff"
-        android:layout_gravity="end"
-        android:layout_margin="10dp"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

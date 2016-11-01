@@ -1,6 +1,8 @@
 package com.sphoton.hoangviet.sixmin.activities;
 
 import android.content.res.Configuration;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,19 +17,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.fivehundredpx.android.blur.BlurringView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.sphoton.hoangviet.sixmin.Commons;
 import com.sphoton.hoangviet.sixmin.R;
 import com.sphoton.hoangviet.sixmin.Utilities;
 import com.sphoton.hoangviet.sixmin.fragments.PostContentFragment;
 import com.sphoton.hoangviet.sixmin.fragments.PostListFragment;
 import com.sphoton.hoangviet.sixmin.fragments.PostVocabularyFragment;
+import com.sphoton.hoangviet.sixmin.fragments.VocabularyDialogFragment;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
+import com.sphoton.hoangviet.sixmin.managers.AnalyticsTrackers;
 import com.sphoton.hoangviet.sixmin.managers.FileManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
@@ -50,13 +58,17 @@ import okhttp3.Response;
 public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener{
     private MediaPlayer mediaPlayer;
     private Post mPost;
+    private static VocabularyDialogFragment dialogFragment;
     private ViewPager viewPager;
     private ImageButton btnPlay;
     private ImageButton btnForward;
     private ImageButton btnBackward;
     private ImageView background;
+    private ImageButton flashCard;
     private CircleIndicator indicator;
     private Toolbar toolbar;
+    private ImageView progressCircle;
+    private LinearLayout playerInterface;
 
     private SeekBar songProgressBar;
     private TextView songCurrentDurationLabel;
@@ -74,20 +86,44 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         mPost = (Post)getIntent().getExtras().getSerializable(Commons.POST);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+
         setupViewPager(viewPager);
         initPlayer();
 
         createView();
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 1){
+                    flashCard.setVisibility(View.VISIBLE);
+                }else
+                    flashCard.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void createView(){
         btnPlay = (ImageButton) findViewById(R.id.btnPlay);
         btnForward = (ImageButton) findViewById(R.id.btnForward);
         btnBackward = (ImageButton) findViewById(R.id.btnBackward);
+        flashCard = (ImageButton) findViewById(R.id.flashCard);
         songProgressBar = (SeekBar) findViewById(R.id.songProgressBar);
         songCurrentDurationLabel = (TextView) findViewById(R.id.songCurrentDurationLabel);
         songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
+        progressCircle = (ImageView) findViewById(R.id.progressCircle);
         ImageView background = (ImageView) findViewById(R.id.background);
+        playerInterface = (LinearLayout) findViewById(R.id.playerInterface);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager );
@@ -141,6 +177,23 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
                     mediaPlayer.seekTo(0);
                 }
 
+            }
+        });
+
+        flashCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialogFragment = VocabularyDialogFragment.newInstance(mPost);
+                dialogFragment.show(getSupportFragmentManager(), null);
+
+                Tracker tracker = AnalyticsTrackers.getTracker(DetailActivity.this);
+                tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("flashCard")
+                        .setAction("click-on")
+                        .setLabel(mPost.getTitle())
+                        .setValue(1)
+                        .build());
             }
         });
 
@@ -216,6 +269,8 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
 
                 mediaPlayer.start();
                 btnPlay.setImageResource(R.drawable.ic_pause_white_48dp);
+                progressCircle.setVisibility(View.GONE);
+                playerInterface.setVisibility(View.VISIBLE);
                 updateProgressBar();
             }
         }.execute();

@@ -29,7 +29,7 @@ import retrofit2.Retrofit;
  */
 public class APIManager {
 
-    public static final String SERVER_NAME = "http://sixmin.dev.sphoton.com";
+    public static final String SERVER_NAME = "http://sixmin.sphoton.com";
     public static final String API_BASE = "/api/v1/";
     public static final String API_GETTOPIC = SERVER_NAME+API_BASE+"topics";
     public static final String API_GETPOST = "/posts";

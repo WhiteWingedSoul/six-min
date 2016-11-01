@@ -1,7 +1,10 @@
 package com.sphoton.hoangviet.sixmin.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +81,44 @@ public class MainActivity extends AppCompatActivity {
         };
         toggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(toggle);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.drawer_item_review:
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("message/rfc822");
+                        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"support@sphoton.com"});
+                        i.putExtra(Intent.EXTRA_SUBJECT, "Phản hồi Earth");
+                        i.putExtra(Intent.EXTRA_TEXT   , "Ứng dụng quá tuyệt vời ~^o^~");
+                        try {
+                            startActivity(Intent.createChooser(i, "Send mail..."));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    case R.id.drawer_item_like:
+                        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
+                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        try {
+                            startActivity(goToMarket);
+                        } catch (ActivityNotFoundException e) {
+                            startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                        }
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
+        //private boolean doNotifyDataSetChangedOnce = false;
         private List<Fragment> mFragmentList = new ArrayList<>();
         private List<Topic> mTopicList = new ArrayList<>();
 
@@ -93,12 +133,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
+//            if(doNotifyDataSetChangedOnce){
+//                notifyDataSetChanged();
+//                doNotifyDataSetChangedOnce = false;
+//            }
             return mFragmentList.size();
         }
 
         public void addFragment(Fragment fragment, Topic topic) {
             mFragmentList.add(fragment);
             mTopicList.add(topic);
+            notifyDataSetChanged();
+//            doNotifyDataSetChangedOnce = true;
         }
 
         @Override
@@ -124,9 +170,14 @@ public class MainActivity extends AppCompatActivity {
                 topics = gson.fromJson(response.body().string(), listType);
                 if (topics.size()>0) {
                     for (String topic : topics) {
-                        Topic top = new Topic();
+                        final Topic top = new Topic();
                         top.setTitle(topic);
-                        adapter.addFragment(PostListFragment.newInstance(top), top);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.addFragment(PostListFragment.newInstance(top), top);
+                            }
+                        });
                     }
                     runOnUiThread(new Runnable() {
                         @Override

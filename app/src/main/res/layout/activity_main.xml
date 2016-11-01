@@ -47,6 +47,15 @@
         app:headerLayout="@layout/drawer_layout"
         app:menu="@menu/drawer_menu_main">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:layout_gravity="bottom"
+            android:textStyle="italic"
+            android:textColor="#CABBBBBB"
+            android:text="developed by sPhoton"/>
+
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

@@ -20,7 +20,7 @@ public class Post implements Serializable {
     @SerializedName("cover")
     private String coverLink;
     @SerializedName("content")
-    private String content;
+    private List<Sentence> content;
     @SerializedName("vocabulary")
     private List<Vocabulary> vocabularyList;
     @SerializedName("audio")
@@ -70,11 +70,11 @@ public class Post implements Serializable {
         this.coverLink = coverLink;
     }
 
-    public String getContent() {
+    public List<Sentence> getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(List<Sentence> content) {
         this.content = content;
     }
 

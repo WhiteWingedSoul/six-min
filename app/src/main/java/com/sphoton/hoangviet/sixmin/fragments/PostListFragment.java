@@ -18,12 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sphoton.hoangviet.sixmin.Commons;
 import com.sphoton.hoangviet.sixmin.R;
 import com.sphoton.hoangviet.sixmin.activities.MainActivity;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
+import com.sphoton.hoangviet.sixmin.managers.AnalyticsTrackers;
 import com.sphoton.hoangviet.sixmin.managers.FileManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
@@ -57,6 +60,13 @@ public class PostListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -96,9 +106,11 @@ public class PostListFragment extends Fragment {
                 Type listType = new TypeToken<List<Post>>() {
                 }.getType();
                 String json = response.body().string().replace("\\/","/")
-                        .replace("\"[","[")
+                        .replace(":\"[",":[")
                         .replace("]\"","]")
-                        .replace("\\\"","\"");
+                        .replace("\\\"","\"")
+                        .replace("\\\\","\\")
+                        .trim();
                 List<Post> posts = gson.fromJson(json, listType);
                 adapter.updateAdapter(posts);
                 getActivity().runOnUiThread(new Runnable() {
@@ -139,7 +151,7 @@ public class PostListFragment extends Fragment {
                     .fit()
                     .into(vh.background);
             vh.title.setText(post.getTitle());
-            vh.description.setText(post.getContent());
+            //vh.description.setText(post.getContent());
 
             vh.frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,6 +159,14 @@ public class PostListFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Commons.POST, post);
                     ((MainActivity)mContext).startActivity(1, bundle);
+
+                    Tracker tracker = AnalyticsTrackers.getTracker(getActivity());
+                    tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("lesson")
+                            .setAction("click-on")
+                            .setLabel(post.getTitle())
+                            .setValue(1)
+                            .build());
                 }
             });
 
