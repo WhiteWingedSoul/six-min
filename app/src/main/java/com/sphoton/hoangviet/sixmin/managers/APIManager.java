@@ -1,5 +1,6 @@
 package com.sphoton.hoangviet.sixmin.managers;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -7,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
+import com.sphoton.hoangviet.sixmin.models.Vocabulary;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,6 +36,7 @@ public class APIManager {
     public static final String API_BASE = "/api/v1/";
     public static final String API_GETTOPIC = SERVER_NAME+API_BASE+"topics";
     public static final String API_GETPOST = "/posts";
+    public static final String TEST = "http://sixmin.sphoton.com/api/v1/posts/1";
 
     public static void GETAllTopics(final Callback callback){
 
@@ -71,6 +75,32 @@ public class APIManager {
                 super.onPreExecute();
                 request = new Request.Builder()
                         .url(SERVER_NAME+API_BASE+topicName+API_GETPOST)
+                        .build();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                client.newCall(request).enqueue(callback);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute();
+    }
+
+    public static void dataForWidget(Context context, final Callback callback){
+        new AsyncTask<Void, Void, Void>() {
+            OkHttpClient client = new OkHttpClient();
+            Request request;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                request = new Request.Builder()
+                        .url(TEST)
                         .build();
             }
 
