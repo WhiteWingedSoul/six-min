@@ -1,5 +1,6 @@
 package com.sphoton.hoangviet.sixmin.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.sphoton.hoangviet.sixmin.R;
+import com.sphoton.hoangviet.sixmin.activities.MainActivity;
 
 public class FlashcardWidgetProvider extends AppWidgetProvider {
     @Override
@@ -52,15 +54,12 @@ public class FlashcardWidgetProvider extends AppWidgetProvider {
             // object above.
             remoteViews.setEmptyView(R.id.stackWidgetView, R.id.stackWidgetEmptyView);
             
-            /*// set intent for item click (opens main activity)
+            // set intent for item click (opens main activity)
             Intent viewIntent = new Intent(context, MainActivity.class);
-            viewIntent.setAction(MainActivity.ACTION_VIEW);
-            viewIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            viewIntent.setData(Uri.parse(viewIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            
+
             PendingIntent viewPendingIntent = PendingIntent.getActivity(context, 0, viewIntent, 0);
-            remoteViews.setPendingIntentTemplate(R.id.stackWidgetView, viewPendingIntent);*/
-            
+            remoteViews.setPendingIntentTemplate(R.id.stackWidgetView, viewPendingIntent);
+
             // update widget
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
         }

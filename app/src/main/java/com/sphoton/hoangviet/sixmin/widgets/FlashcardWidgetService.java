@@ -3,6 +3,7 @@ package com.sphoton.hoangviet.sixmin.widgets;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -59,6 +60,11 @@ public class FlashcardWidgetService extends RemoteViewsService {
                 Vocabulary vocabulary = list.get(position);
                 remoteViews.setTextViewText(R.id.word, vocabulary.getWord());
                 remoteViews.setTextViewText(R.id.meaning, vocabulary.getMeaning());
+
+                Bundle extras = new Bundle();
+                Intent fillInIntent = new Intent();
+                fillInIntent.putExtras(extras);
+                remoteViews.setOnClickFillInIntent(R.id.flashcardLayout, fillInIntent);
             }
 
             return remoteViews;

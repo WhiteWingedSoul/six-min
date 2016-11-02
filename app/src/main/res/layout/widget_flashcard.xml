@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flashcardWidgetLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/on_click_default_style">
     <StackView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/stackWidgetView"
         android:layout_width="match_parent"
