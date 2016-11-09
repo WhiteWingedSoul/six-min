@@ -1,5 +1,11 @@
 package com.sphoton.hoangviet.sixmin.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.Image;
@@ -7,9 +13,11 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +48,7 @@ import com.sphoton.hoangviet.sixmin.managers.FileManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
 import com.sphoton.hoangviet.sixmin.thirdparties.BlurTransform;
+import com.sphoton.hoangviet.sixmin.widgets.MediaPlayerService;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -56,7 +65,6 @@ import okhttp3.Response;
  * Created by hoangviet on 10/13/16.
  */
 public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener{
-    private MediaPlayer mediaPlayer;
     private Post mPost;
     private static VocabularyDialogFragment dialogFragment;
     private ViewPager viewPager;
@@ -74,9 +82,14 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
     private TextView songCurrentDurationLabel;
     private TextView songTotalDurationLabel;
 
+    private Handler mHandler = new Handler();
+    private BroadcastReceiver receiver;
     private int seekForwardTime = 5000;
     private int seekBackwardTime = 5000;
-    private Handler mHandler = new Handler();
+
+
+    private MediaPlayerService mService;
+    private boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,29 +101,14 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         setupViewPager(viewPager);
-        initPlayer();
 
         createView();
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if(position == 1){
-                    flashCard.setVisibility(View.VISIBLE);
-                }else
-                    flashCard.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        Intent intent = new Intent(DetailActivity.this, MediaPlayerService.class);
+        intent.setAction(Commons.CHANGE_LESSON);
+        intent.putExtra(Commons.POST, mPost);
+        startService(intent);
     }
 
     private void createView(){
@@ -140,15 +138,17 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mediaPlayer.isPlaying()){
-                    if(mediaPlayer!=null){
-                        mediaPlayer.pause();
-                        btnPlay.setImageResource(R.drawable.ic_play_arrow_white_48dp);
-                    }
-                }else{
-                    if(mediaPlayer!=null){
-                        mediaPlayer.start();
-                        btnPlay.setImageResource(R.drawable.ic_pause_white_48dp);
+                if (mBound) {
+                    if (mService.getMediaPlayer().isPlaying()) {
+                        if (mService.getMediaPlayer() != null) {
+                            mService.getMediaPlayer().pause();
+                            btnPlay.setImageResource(R.drawable.ic_play_arrow_white_48dp);
+                        }
+                    } else {
+                        if (mService.getMediaPlayer() != null) {
+                            mService.getMediaPlayer().start();
+                            btnPlay.setImageResource(R.drawable.ic_pause_white_48dp);
+                        }
                     }
                 }
             }
@@ -157,12 +157,18 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         btnForward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int currentPosition = mediaPlayer.getCurrentPosition();
-                if(currentPosition + seekForwardTime <= mediaPlayer.getDuration()){
-                    mediaPlayer.seekTo(currentPosition + seekForwardTime);
-                }else{
-                    mediaPlayer.seekTo(mediaPlayer.getDuration());
+                if (mBound) {
+                    int currentPosition = mService.getMediaPlayer().getCurrentPosition();
+                    if(currentPosition + seekForwardTime <= mService.getMediaPlayer().getDuration()){
+                        mService.getMediaPlayer().seekTo(currentPosition + seekForwardTime);
+                    }else{
+                        mService.getMediaPlayer().seekTo(mService.getMediaPlayer().getDuration());
+                    }
                 }
+                /*
+                Intent intent = new Intent(DetailActivity.this, MediaPlayerService.class);
+                intent.setAction(Commons.NEXT_ACTION);
+                startService(intent);*/
             }
         });
 
@@ -170,20 +176,24 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
 
             @Override
             public void onClick(View arg0) {
-                int currentPosition = mediaPlayer.getCurrentPosition();
-                if(currentPosition - seekBackwardTime >= 0){
-                    mediaPlayer.seekTo(currentPosition - seekBackwardTime);
-                }else{
-                    mediaPlayer.seekTo(0);
+                if (mBound) {
+                    int currentPosition = mService.getMediaPlayer().getCurrentPosition();
+                    if (currentPosition - seekBackwardTime >= 0) {
+                        mService.getMediaPlayer().seekTo(currentPosition - seekBackwardTime);
+                    } else {
+                        mService.getMediaPlayer().seekTo(0);
+                    }
                 }
 
+            /*    Intent intent = new Intent(DetailActivity.this, MediaPlayerService.class);
+                intent.setAction(Commons.PREV_ACTION);
+                startService(intent);*/
             }
         });
 
         flashCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 dialogFragment = VocabularyDialogFragment.newInstance(mPost);
                 dialogFragment.show(getSupportFragmentManager(), null);
 
@@ -198,6 +208,20 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         });
 
         songProgressBar.setOnSeekBarChangeListener(this);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (intent.getStringExtra("message")){
+                    case Commons.ON_STARTED_AUDIO:
+                        btnPlay.setImageResource(R.drawable.ic_pause_white_48dp);
+                        progressCircle.setVisibility(View.GONE);
+                        playerInterface.setVisibility(View.VISIBLE);
+                        updateProgressBar();
+                        break;
+                }
+            }
+        };
     }
 
     private void updateProgressBar() {
@@ -206,16 +230,18 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
 
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-            long totalDuration = mediaPlayer.getDuration();
-            long currentDuration = mediaPlayer.getCurrentPosition();
+            if (mBound) {
+                long totalDuration = mService.getMediaPlayer().getDuration();
+                long currentDuration = mService.getMediaPlayer().getCurrentPosition();
 
 
-            songTotalDurationLabel.setText(""+ Utilities.milliSecondsToTimer(totalDuration));
-            songCurrentDurationLabel.setText(""+Utilities.milliSecondsToTimer(currentDuration));
+                songTotalDurationLabel.setText("" + Utilities.milliSecondsToTimer(totalDuration));
+                songCurrentDurationLabel.setText("" + Utilities.milliSecondsToTimer(currentDuration));
 
-            int progress = (int)(Utilities.getProgressPercentage(currentDuration, totalDuration));
-            songProgressBar.setProgress(progress);
+                int progress = (int) (Utilities.getProgressPercentage(currentDuration, totalDuration));
+                songProgressBar.setProgress(progress);
 
+            }
             mHandler.postDelayed(this, 100);
         }
     };
@@ -249,40 +275,6 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         }
     }
 
-    private void initPlayer(){
-        mediaPlayer = new MediaPlayer();
-        new AsyncTask<Void, Void, Void>(){
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    mediaPlayer.setDataSource(FileManager.getAudioFilePath(DetailActivity.this, "http://"+mPost.getAudioLink()));
-                    mediaPlayer.prepare();
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                mediaPlayer.start();
-                btnPlay.setImageResource(R.drawable.ic_pause_white_48dp);
-                progressCircle.setVisibility(View.GONE);
-                playerInterface.setVisibility(View.VISIBLE);
-                updateProgressBar();
-            }
-        }.execute();
-    }
-
-    private void destroyPlayer(){
-        mHandler.removeCallbacks(mUpdateTimeTask);
-        mediaPlayer.stop();
-        mediaPlayer.release();
-
-    }
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -303,7 +295,7 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         //}
         if (item.getItemId() == android.R.id.home) {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            destroyPlayer();
+            mHandler.removeCallbacks(mUpdateTimeTask);
             finish();
 
             return true;
@@ -315,7 +307,7 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        destroyPlayer();
+        mHandler.removeCallbacks(mUpdateTimeTask);
         finish();
     }
 
@@ -338,11 +330,58 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         mHandler.removeCallbacks(mUpdateTimeTask);
-        int totalDuration = mediaPlayer.getDuration();
-        int currentPosition = Utilities.progressToTimer(seekBar.getProgress(), totalDuration);
 
-        mediaPlayer.seekTo(currentPosition);
+        if (mBound) {
+            int totalDuration = mService.getMediaPlayer().getDuration();
+            int currentPosition = Utilities.progressToTimer(seekBar.getProgress(), totalDuration);
+
+            mService.getMediaPlayer().seekTo(currentPosition);
+        }
 
         updateProgressBar();
     }
+
+    @Override
+    protected void onStart() {
+        // Bind to LocalService
+        Intent intent = new Intent(this, MediaPlayerService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+                new IntentFilter(Commons.UPDATE_FROM_SERVICE)
+        );
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+
+        super.onStop();
+    }
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 }

@@ -148,7 +148,6 @@
                     </LinearLayout>
 
                     <ImageButton
-                        android:visibility="gone"
                         android:id="@+id/flashCard"
                         android:src="@drawable/icon_flashcard"
                         android:scaleType="centerCrop"
