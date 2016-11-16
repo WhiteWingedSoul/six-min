@@ -56,4 +56,12 @@
         android:contentDescription="Forward"
         android:src="@drawable/ic_fast_forward_white_48dp" />
 
+
+    <ImageButton
+        android:id="@+id/status_bar_collapse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/on_click_default_style"
+        android:src="@drawable/apollo_holo_dark_notifiation_bar_collapse" />
+
 </LinearLayout>

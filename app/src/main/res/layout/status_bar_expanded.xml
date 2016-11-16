@@ -66,27 +66,43 @@
             android:orientation="vertical"
             android:id="@+id/textarea"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
-            <TextView
-                android:ellipsize="marquee"
-                android:layout_gravity="left"
-                android:id="@+id/status_bar_track_name"
-                android:focusable="true"
-                android:fadingEdge="horizontal"
-                android:paddingTop="10dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:ellipsize="marquee"
+                    android:layout_gravity="left"
+                    android:id="@+id/status_bar_track_name"
+                    android:focusable="true"
+                    android:fadingEdge="horizontal"
+                    android:paddingTop="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test test"
+                    android:singleLine="true"
+                    android:paddingRight="8dp"
+                    android:layout_marginRight="30dp"
+                    />
+                <ImageButton
+                    android:layout_gravity="right"
+                    android:id="@+id/status_bar_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/on_click_default_style"
+                    android:src="@drawable/apollo_holo_dark_notifiation_bar_collapse" />
+
+            </FrameLayout>
+
             <TextView
                 android:ellipsize="end"
                 android:layout_gravity="left"
                 android:id="@+id/status_bar_album_name"
                 android:fadingEdge="horizontal"
                 android:paddingTop="10dp"
+                android:paddingRight="8dp"
                 android:text="HUGE THANKS to The Alzheimer's Association for graciously giving me time with and access to scientists currently researching the disease. You can learn more about them here: https://www.alz.org/"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -100,7 +100,7 @@ public class PostContentFragment extends Fragment{
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_vocabulary, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_conversation, parent, false);
             RecyclerView.ViewHolder viewHolder = new SentenceViewHolder(view);
             return viewHolder;
         }

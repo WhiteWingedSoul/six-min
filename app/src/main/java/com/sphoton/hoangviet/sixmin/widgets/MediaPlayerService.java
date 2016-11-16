@@ -116,6 +116,12 @@ public class MediaPlayerService extends Service {
                 buildNotification(post);
                 break;
 
+            case Commons.CLOSE_ACTION:
+
+                stopForeground(true);
+                stopSelf();
+                break;
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -146,6 +152,14 @@ public class MediaPlayerService extends Service {
         nextIntent.setAction(Commons.NEXT_ACTION);
         PendingIntent pnextIntent = PendingIntent.getService(this, 0,
                 nextIntent, 0);
+
+        Intent closeIntent = new Intent(this, MediaPlayerService.class);
+        closeIntent.setAction(Commons.CLOSE_ACTION);
+        PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
+                closeIntent, 0);
+
+        views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
+        bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
 
         views.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);
         bigViews.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);

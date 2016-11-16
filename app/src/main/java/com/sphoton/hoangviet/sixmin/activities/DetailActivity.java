@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,8 +23,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +48,9 @@ import com.sphoton.hoangviet.sixmin.fragments.PostVocabularyFragment;
 import com.sphoton.hoangviet.sixmin.fragments.VocabularyDialogFragment;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
 import com.sphoton.hoangviet.sixmin.managers.AnalyticsTrackers;
+import com.sphoton.hoangviet.sixmin.managers.AnimationHelper;
 import com.sphoton.hoangviet.sixmin.managers.FileManager;
+import com.sphoton.hoangviet.sixmin.managers.HostReachability;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
 import com.sphoton.hoangviet.sixmin.thirdparties.BlurTransform;
@@ -55,6 +61,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.relex.circleindicator.CircleIndicator;
 import okhttp3.Call;
@@ -90,6 +98,9 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
 
     private MediaPlayerService mService;
     private boolean mBound = false;
+    private FrameLayout noInternetLayout;
+
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +135,8 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
         playerInterface = (LinearLayout) findViewById(R.id.playerInterface);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         indicator = (CircleIndicator) findViewById(R.id.indicator);
-        indicator.setViewPager(viewPager );
+        indicator.setViewPager(viewPager);
+        noInternetLayout = (FrameLayout)findViewById(R.id.noInternetLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mPost.getTitle());
 
@@ -218,6 +230,42 @@ public class DetailActivity extends AppCompatActivity implements SeekBar.OnSeekB
                         progressCircle.setVisibility(View.GONE);
                         playerInterface.setVisibility(View.VISIBLE);
                         updateProgressBar();
+                        break;
+                }
+            }
+        };
+        initReachabilityService();
+    }
+
+    private void initReachabilityService(){
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run() {
+                try {
+                    HostReachability.checkHostReachable(DetailActivity.this);
+                    handler.obtainMessage(1).sendToTarget();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    handler.obtainMessage(0).sendToTarget();
+                    Log.d("Connection","unreachable");
+                    HostReachability.setHasConnection(false);
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(task, 0, 2000);
+        handler = new Handler(Looper.getMainLooper()) {
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case 0:
+                        if (noInternetLayout != null)
+                            if (!noInternetLayout.isShown())
+                                AnimationHelper.viewVisible(noInternetLayout);
+                        break;
+                    case 1:
+                        if (noInternetLayout != null)
+                            if (noInternetLayout.isShown())
+                                AnimationHelper.viewGone(noInternetLayout);
                         break;
                 }
             }

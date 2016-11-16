@@ -4,6 +4,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -19,6 +22,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,6 +31,8 @@ import com.google.gson.reflect.TypeToken;
 import com.sphoton.hoangviet.sixmin.R;
 import com.sphoton.hoangviet.sixmin.fragments.PostListFragment;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
+import com.sphoton.hoangviet.sixmin.managers.AnimationHelper;
+import com.sphoton.hoangviet.sixmin.managers.HostReachability;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
 
@@ -33,6 +40,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+
+    private FrameLayout noInternetLayout;
+
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
+
+        noInternetLayout = (FrameLayout)findViewById(R.id.noInternetLayout);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -115,6 +130,43 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        initReachabilityService();
+    }
+
+    private void initReachabilityService(){
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run() {
+                try {
+                    HostReachability.checkHostReachable(MainActivity.this);
+                    handler.obtainMessage(1).sendToTarget();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    handler.obtainMessage(0).sendToTarget();
+                    Log.d("Connection","unreachable");
+                    HostReachability.setHasConnection(false);
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(task, 0, 2000);
+        handler = new Handler(Looper.getMainLooper()) {
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case 0:
+                        if (noInternetLayout != null)
+                            if (!noInternetLayout.isShown())
+                                AnimationHelper.viewVisible(noInternetLayout);
+                        break;
+                    case 1:
+                        if (noInternetLayout != null)
+                            if (noInternetLayout.isShown())
+                                AnimationHelper.viewGone(noInternetLayout);
+                        break;
+                }
+            }
+        };
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

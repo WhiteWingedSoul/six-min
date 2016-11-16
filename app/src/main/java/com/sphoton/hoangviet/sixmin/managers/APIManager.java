@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,7 +37,7 @@ public class APIManager {
     public static final String API_BASE = "/api/v1/";
     public static final String API_GETTOPIC = SERVER_NAME+API_BASE+"topics";
     public static final String API_GETPOST = "/posts";
-    public static final String TEST = "http://sixmin.sphoton.com/api/v1/posts/1";
+    public static final String API_WIDGET = "http://sixmin.sphoton.com/api/v1/posts/";
 
     public static void GETAllTopics(final Callback callback){
 
@@ -100,7 +101,7 @@ public class APIManager {
             protected void onPreExecute() {
                 super.onPreExecute();
                 request = new Request.Builder()
-                        .url(TEST)
+                        .url(API_WIDGET+ new Random().nextInt(100))
                         .build();
             }
 

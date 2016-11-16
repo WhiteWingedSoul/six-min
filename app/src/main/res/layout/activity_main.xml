@@ -30,6 +30,25 @@
                 android:layout_height="wrap_content"
                 app:tabMode="fixed"
                 app:tabGravity="fill"/>
+            <FrameLayout
+                android:id="@+id/noInternetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/noInternetText"
+                    android:alpha="0.9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="You have no internet connection"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    android:textColor="#fff"
+                    android:padding="4dp"
+                    android:background="#BDBDBD"/>
+
+            </FrameLayout>
+
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
@@ -38,6 +57,7 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
     </android.support.design.widget.CoordinatorLayout>
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"

@@ -17,6 +17,8 @@ public class Post implements Serializable {
     private String updated_at;
     @SerializedName("title")
     private String title;
+    @SerializedName("description")
+    private String description;
     @SerializedName("cover")
     private String coverLink;
     @SerializedName("content")
@@ -64,6 +66,14 @@ public class Post implements Serializable {
 
     public String getCoverLink() {
         return coverLink;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setCoverLink(String coverLink) {

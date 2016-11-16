@@ -151,7 +151,7 @@ public class PostListFragment extends Fragment {
                     .fit()
                     .into(vh.background);
             vh.title.setText(post.getTitle());
-            //vh.description.setText(post.getContent());
+            vh.description.setText(post.getDescription());
 
             vh.frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

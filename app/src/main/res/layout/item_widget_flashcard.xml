@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="300dp">
 
     <FrameLayout
         android:id="@+id/flashcardLayout"
@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:gravity="top"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffffff">
@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="Test"
                 android:padding="10dp"
-                android:textSize="15dp"
+                android:textSize="22dp"
                 android:textStyle="bold"
                 android:textColor="#a0a0a0"
                 android:gravity="center"
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="Testaweawerawklejawkejklwjealwkejaklwjelkawjeakwejlawkeawklejawk"
                 android:padding="10dp"
-                android:textSize="15dp"
+                android:textSize="18dp"
                 android:textColor="#a0a0a0"
                 android:gravity="center"
                 android:layout_gravity="center"
