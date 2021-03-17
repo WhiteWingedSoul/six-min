@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "499015659128",
+    "project_id": "firebase-sixminute"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499015659128:android:c208e22b365245be",
+        "android_client_info": {
+          "package_name": "com.sphoton.hoangviet.sixmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWo5hFEwppG3kzX7hlD1hUdOiAC47JaHM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-76982247-5"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

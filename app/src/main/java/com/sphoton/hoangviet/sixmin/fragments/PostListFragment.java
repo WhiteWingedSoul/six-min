@@ -1,10 +1,12 @@
 package com.sphoton.hoangviet.sixmin.fragments;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,12 +15,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sphoton.hoangviet.sixmin.Commons;
 import com.sphoton.hoangviet.sixmin.R;
+import com.sphoton.hoangviet.sixmin.activities.MainActivity;
 import com.sphoton.hoangviet.sixmin.managers.APIManager;
+import com.sphoton.hoangviet.sixmin.managers.AnalyticsTrackers;
+import com.sphoton.hoangviet.sixmin.managers.FileManager;
 import com.sphoton.hoangviet.sixmin.models.Post;
 import com.sphoton.hoangviet.sixmin.models.Topic;
 import com.squareup.picasso.Picasso;
@@ -39,12 +48,10 @@ public class PostListFragment extends Fragment {
     private RecyclerView recyclerView;
     private PostPreviewAdapter adapter;
 
-    public static final String TOPIC = "topic";
-
     public static PostListFragment newInstance(Topic topic) {
         PostListFragment fragment = new PostListFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TOPIC, topic);
+        args.putSerializable(Commons.TOPIC, topic);
         fragment.setArguments(args);
 
         return fragment;
@@ -53,6 +60,13 @@ public class PostListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -69,11 +83,17 @@ public class PostListFragment extends Fragment {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         setUpAdapter(recyclerView);
+
+
+        ImageView background = (ImageView) view.findViewById(R.id.background);
+        Picasso.with(getActivity()).load(R.drawable.background2)
+                .fit()
+                .into(background);
     }
 
     private void setUpAdapter(RecyclerView recyclerView) {
         final PostPreviewAdapter adapter = new PostPreviewAdapter(getActivity());
-        Topic topic = (Topic)getArguments().getSerializable(TOPIC);
+        Topic topic = (Topic)getArguments().getSerializable(Commons.TOPIC);
         APIManager.GETPost(topic.getTitle(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -86,9 +106,11 @@ public class PostListFragment extends Fragment {
                 Type listType = new TypeToken<List<Post>>() {
                 }.getType();
                 String json = response.body().string().replace("\\/","/")
-                        .replace("\"[","[")
+                        .replace(":\"[",":[")
                         .replace("]\"","]")
-                        .replace("\\\"","\"");
+                        .replace("\\\"","\"")
+                        .replace("\\\\","\\")
+                        .trim();
                 List<Post> posts = gson.fromJson(json, listType);
                 adapter.updateAdapter(posts);
                 getActivity().runOnUiThread(new Runnable() {
@@ -124,19 +146,35 @@ public class PostListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             PostPreviewHolder vh = (PostPreviewHolder) holder;
-            Post post = mList.get(position);
+            final Post post = mList.get(position);
             Picasso.with(getActivity()).load("http://"+post.getCoverLink())
                     .fit()
                     .into(vh.background);
             vh.title.setText(post.getTitle());
-            vh.description.setText(post.getContent());
+            vh.description.setText(post.getDescription());
 
             vh.frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(Commons.POST, post);
+                    ((MainActivity)mContext).startActivity(1, bundle);
 
+                    Tracker tracker = AnalyticsTrackers.getTracker(getActivity());
+                    tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("lesson")
+                            .setAction("click-on")
+                            .setLabel(post.getTitle())
+                            .setValue(1)
+                            .build());
                 }
             });
+
+            if(FileManager.isDownloaded(getActivity(), "http://"+post.getAudioLink())){
+                vh.downloadStatus.setVisibility(View.VISIBLE);
+            }else{
+                vh.downloadStatus.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -148,18 +186,20 @@ public class PostListFragment extends Fragment {
     }
 
     class PostPreviewHolder extends RecyclerView.ViewHolder{
-        public FrameLayout frameLayout;
+        public CardView frameLayout;
         public ImageView background;
         public TextView title;
         public TextView description;
+        public LinearLayout downloadStatus;
 
         public PostPreviewHolder(View view){
             super(view);
 
-            frameLayout = (FrameLayout) view.findViewById(R.id.frameLayout);
+            frameLayout = (CardView) view.findViewById(R.id.frameLayout);
             background = (ImageView) view.findViewById(R.id.background);
             title = (TextView) view.findViewById(R.id.postTitle);
             description = (TextView) view.findViewById(R.id.postDescription);
+            downloadStatus = (LinearLayout) view.findViewById(R.id.downloadStatus);
         }
 
     }

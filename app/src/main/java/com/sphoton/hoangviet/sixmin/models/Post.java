@@ -2,12 +2,13 @@ package com.sphoton.hoangviet.sixmin.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by hoangviet on 10/11/16.
  */
-public class Post {
+public class Post implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("created_at")
@@ -16,16 +17,20 @@ public class Post {
     private String updated_at;
     @SerializedName("title")
     private String title;
+    @SerializedName("description")
+    private String description;
     @SerializedName("cover")
     private String coverLink;
     @SerializedName("content")
-    private String content;
+    private List<Sentence> content;
     @SerializedName("vocabulary")
     private List<Vocabulary> vocabularyList;
     @SerializedName("audio")
     private String audioLink;
     @SerializedName("date")
     private String date;
+    private boolean isDownloaded;
+
 
     public int getId() {
         return id;
@@ -63,15 +68,23 @@ public class Post {
         return coverLink;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setCoverLink(String coverLink) {
         this.coverLink = coverLink;
     }
 
-    public String getContent() {
+    public List<Sentence> getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(List<Sentence> content) {
         this.content = content;
     }
 
@@ -97,5 +110,13 @@ public class Post {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isDownloaded() {
+        return isDownloaded;
+    }
+
+    public void setDownloaded(boolean downloaded) {
+        isDownloaded = downloaded;
     }
 }

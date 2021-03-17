@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/frameLayout"
+    android:background="@drawable/on_click_default_style">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/word"
+                android:text="identity"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#BFFFFFFF"
+                android:gravity="top"
+                android:fontFamily="serif" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/meaning"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BFFFFFFF"
+            android:hint="HUGE THANKS "
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:gravity="top"
+            android:fontFamily="sans-serif" />
+    </LinearLayout>
+</FrameLayout>

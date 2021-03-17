@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="horizontal"
+    android:id="@+id/notificationbg" android:layout_width="fill_parent" android:layout_height="128.0dip"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/status_bar_album_art"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/background2"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cardview_dark_background">
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:listDivider"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:showDividers="middle"
+            android:dividerPadding="12dp">
+            <ImageButton
+                android:id="@+id/status_bar_prev"
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_fast_rewind_white_48dp"
+                android:scaleType="fitCenter"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/status_bar_play"
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_play_arrow_white_48dp"
+                android:scaleType="fitCenter"
+                android:layout_weight="1" />
+            <ImageButton android:id="@+id/status_bar_next"
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_fast_forward_white_48dp"
+                android:scaleType="fitCenter"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <ImageView
+            android:background="?android:dividerHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_above="@+id/buttons"
+            android:layout_alignParentRight="true" />
+        <LinearLayout
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:id="@+id/textarea"
+            android:paddingLeft="8dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:ellipsize="marquee"
+                    android:layout_gravity="left"
+                    android:id="@+id/status_bar_track_name"
+                    android:focusable="true"
+                    android:fadingEdge="horizontal"
+                    android:paddingTop="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="test test"
+                    android:singleLine="true"
+                    android:paddingRight="8dp"
+                    android:layout_marginRight="30dp"
+                    />
+                <ImageButton
+                    android:layout_gravity="right"
+                    android:id="@+id/status_bar_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/on_click_default_style"
+                    android:src="@drawable/apollo_holo_dark_notifiation_bar_collapse" />
+
+            </FrameLayout>
+
+            <TextView
+                android:ellipsize="end"
+                android:layout_gravity="left"
+                android:id="@+id/status_bar_album_name"
+                android:fadingEdge="horizontal"
+                android:paddingTop="10dp"
+                android:paddingRight="8dp"
+                android:text="HUGE THANKS to The Alzheimer's Association for graciously giving me time with and access to scientists currently researching the disease. You can learn more about them here: https://www.alz.org/"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

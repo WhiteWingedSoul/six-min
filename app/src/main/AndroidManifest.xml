@@ -3,19 +3,56 @@
     package="com.sphoton.hoangviet.sixmin">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
+        android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_2"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+        android:screenOrientation="portrait"
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.DetailActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+
+        <receiver android:name=".widgets.FlashcardWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/flashcard_widget_info" />
+        </receiver>
+
+        <service android:name=".widgets.FlashcardWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
+        <service android:name=".widgets.MediaPlayerService">
+            <intent-filter>
+                <action android:name="com.sphoton.sixmin.action.changelesson" />
+                <action android:name="com.sphoton.sixmin.action.prev" />
+                <action android:name="com.sphoton.sixmin.action.play" />
+                <action android:name="com.sphoton.sixmin.action.next" />
+                <action android:name="com.sphoton.sixmin.action.changelesson" />
+            </intent-filter>
+        </service>
+
     </application>
+
 
 </manifest>
